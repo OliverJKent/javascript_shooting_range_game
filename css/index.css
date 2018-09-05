@@ -5,7 +5,7 @@
   background-size: contain;
   text-align: center;
   margin: auto;
-  cursor: crosshair;
+  cursor: url('../images/crosshair.png'), auto;
   font-family: "Impact";
   color: black;
   text-shadow:
@@ -13,6 +13,7 @@
   1px -1px 0 white,
   -1px 1px 0 white,
   1px 1px 0 white;
+  z-index: 2;
 }
 
 .targets {
@@ -22,9 +23,8 @@
   margin-bottom: 50px;
   opacity:0;
   transition: opacity 0.5s;
+  border-radius: 100px;
 }
-
-
 
 #reload {
   color: white;
@@ -36,10 +36,11 @@
 }
 
 #instructions {
+  font-size: 30px;
   text-shadow: none;
   margin-top: 50px;
-  margin-left: 200px;
-  margin-right: 200px;
+  margin-left: 150px;
+  margin-right: 150px;
   background-color: white;
   border-style: solid;
   border-width: 10px;
@@ -48,4 +49,17 @@
 #menuButton {
   text-align: right;
   margin-right: 25px;
+}
+
+#behind {
+  text-align: left;
+}
+
+#bird {
+  width: 80px;
+  height: 45px;
+  opacity:0;
+  transition: opacity 1s;
+  margin-left: 0px;
+  transition: margin-left 10s;
 }

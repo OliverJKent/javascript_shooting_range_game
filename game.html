@@ -7,12 +7,11 @@
     <link rel="stylesheet" href="css/index.css">
   </head>
   <body>
-
     <div class="gameArea" id='gameArea'>
       <div class='container'>
         <div class='row'>
           <div class=col-4>
-            <h4>Highscore = <span id="highestScore"></span></h4>
+            <h4 id='highScoreDisplay'>Highscore = <span id="highestScore"></span></h4>
             <h4 id='scoreDisplay'>Score = <span id="score">0</span></h4>
           </div>
           <div class=col-4>
@@ -24,7 +23,9 @@
           </div>
         </div>
       </div>
-
+      <div id='behind'>
+        <img id='bird' src="images/bird.gif" alt="Flying bird">
+      </div>
       <div id='targetDiv1'>
         <img class="targets" data-num="0" src="images/target.png" alt="target">
         <img class="targets" data-num="1" src="images/target.png" alt="target">
