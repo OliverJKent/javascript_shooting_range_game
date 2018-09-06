@@ -2,16 +2,8 @@ function randomNum() { //random number generator for the time targets take to ap
   return(Math.floor(Math.random() * 10000) + 500); //number is between 1000 and 10000
 }
 
-function randomNum2() {
-  return(Math.floor(Math.random() * 35000) + 25000); //number is between 25000 and 35000
-}
-
-function randomNum3() { //random number generator for the size of the targets
+function randomNum2() { //random number generator for the size of the targets
   return(Math.floor(Math.random() * 60) + 25); //number is between 100 and 25
-}
-
-function randomNum4() { //random number generator for the time the bird takes to appear
-  return(Math.floor(Math.random() * 15000) + 10000); //number is between 13000 and 15000
 }
 
 var targets = document.getElementsByClassName('targets'); //these variables will allow the HTML to be edited later
@@ -24,19 +16,33 @@ var timer = document.getElementById('countdown');
 var highScoreDisplay = document.getElementById('highestScore');
 var birdControl = document.getElementById('bird');
 
-var seconds = 0;
-
-if (localStorage.hasOwnProperty('highScore') === false) { //If local storage for the high score has not been created
-  localStorage.setItem('highScore', 0);  //create one and set it to 0
+if (localStorage.hasOwnProperty('highScoreList1') === false) { //If local storage for the high score has not been created
+  localStorage.setItem('highScoreList1', 0);  //create one and set it to 0
 }
 
-highScoreDisplay.innerHTML = localStorage.getItem('highScore'); //display the stored high score
+if (localStorage.hasOwnProperty('highScoreList2') === false) { //If local storage for the high score has not been created
+  localStorage.setItem('highScoreList2', 0);  //create one and set it to 0
+}
 
+if (localStorage.hasOwnProperty('highScoreList3') === false) { //If local storage for the high score has not been created
+  localStorage.setItem('highScoreList3', 0);  //create one and set it to 0
+}
 
+if (localStorage.hasOwnProperty('highScoreList4') === false) { //If local storage for the high score has not been created
+  localStorage.setItem('highScoreList4', 0);  //create one and set it to 0
+}
+
+if (localStorage.hasOwnProperty('highScoreList5') === false) { //If local storage for the high score has not been created
+  localStorage.setItem('highScoreList5', 0);  //create one and set it to 0
+}
+
+highScoreDisplay.innerHTML = localStorage.getItem('highScoreList1'); //display the stored high score
+
+var seconds = 0;
 var i = setInterval(function() { //this function repeats once per second, the game will end after 60 seconds
   seconds++; //add one to the total number of seconds
   timer.innerHTML = timer.innerHTML - 1; //take one off the time remaining
-  if (seconds === 60) { //if the time is up
+  if (seconds === 30) { //if the time is up
     clearInterval(i); //stop the interval
     $('#targetDiv1').remove(); //remove these elements
     $('#targetDiv2').remove();
@@ -46,10 +52,9 @@ var i = setInterval(function() { //this function repeats once per second, the ga
     $('#reload').remove();
     $('#menuButton').remove();
     $('#remaining').remove();
-    $('#bird').remove();
     var newHeading = document.createElement("h1"); //create a new heading that tells you time is up
     newHeading.style.textAlign = "center";
-    if (scoreCount.innerHTML > parseInt(localStorage.getItem('highScore'))) {
+    if (parseInt(scoreCount.innerHTML) > localStorage.getItem('highScoreList1')) {
       newHeading.innerHTML = "Time is up! You set a new highscore: "+parseInt(scoreCount.innerHTML);
       $('#highScoreDisplay').remove();
     } else {
@@ -73,13 +78,31 @@ var i = setInterval(function() { //this function repeats once per second, the ga
     document.getElementById('gameArea').appendChild(document.createElement("br"));
     document.getElementById('gameArea').appendChild(document.createElement("br"));
     document.getElementById('gameArea').appendChild(newButton2);
-    if (scoreCount.innerHTML > parseInt(localStorage.getItem('highScore'))) { //if a new high score was achieved
-      localStorage.setItem('highScore', parseInt(scoreCount.innerHTML)); //change the high score
-      highScoreDisplay.innerHTML = parseInt(localStorage.getItem('highScore'));
+    if (parseInt(scoreCount.innerHTML) >= localStorage.getItem('highScoreList5') && parseInt(scoreCount.innerHTML) <= localStorage.getItem('highScoreList4')) {
+        localStorage.setItem('highScoreList5', scoreCount.innerHTML);
+    } else if (parseInt(scoreCount.innerHTML) >= localStorage.getItem('highScoreList4') && parseInt(scoreCount.innerHTML) <= localStorage.getItem('highScoreList3')) {
+        localStorage.setItem('highScoreList5',localStorage.getItem('highScoreList4'));
+        localStorage.setItem('highScoreList4', parseInt(scoreCount.innerHTML));
+    } else if (parseInt(scoreCount.innerHTML) >= localStorage.getItem('highScoreList3') && parseInt(scoreCount.innerHTML) <= localStorage.getItem('highScoreList2')) {
+        localStorage.setItem('highScoreList5',localStorage.getItem('highScoreList4'));
+        localStorage.setItem('highScoreList4',localStorage.getItem('highScoreList3'));
+        localStorage.setItem('highScoreList3', parseInt(scoreCount.innerHTML));
+    } else if (parseInt(scoreCount.innerHTML) >= localStorage.getItem('highScoreList2') && parseInt(scoreCount.innerHTML) <= localStorage.getItem('highScoreList1')) {
+        localStorage.setItem('highScoreList5',localStorage.getItem('highScoreList4'));
+        localStorage.setItem('highScoreList4',localStorage.getItem('highScoreList3'));
+        localStorage.setItem('highScoreList3',localStorage.getItem('highScoreList2'));
+        localStorage.setItem('highScoreList2', scoreCount.innerHTML);
+    } else if (parseInt(scoreCount.innerHTML) >= localStorage.getItem('highScoreList1'))  {
+        localStorage.setItem('highScoreList5',localStorage.getItem('highScoreList4'));
+        localStorage.setItem('highScoreList4',localStorage.getItem('highScoreList3'));
+        localStorage.setItem('highScoreList3',localStorage.getItem('highScoreList2'));
+        localStorage.setItem('highScoreList2',localStorage.getItem('highScoreList1'));
+        localStorage.setItem('highScoreList1', scoreCount.innerHTML);
+        highScoreDisplay.innerHTML = parseInt(localStorage.getItem('highScoreList1'));
     }
-  }
-}, 1000);
+    }
 
+}, 1000);
 
 reload.addEventListener('click', function() { //reload button
   ammoCount.innerHTML = "Reloading...";
@@ -96,12 +119,9 @@ clickArea.addEventListener('click', function() { //deplete ammo when clicking in
 }
 });
 
-
-
-
 for(let box of targets){ //target logic
   box.style.visibility = "hidden"; //the target are hidden to start with
-  var size = randomNum3();
+  var size = randomNum2();
   box.style.height = size + "px"; //the size of the targets is random
   box.style.width = size + "px";
   setTimeout(function(){ box.style.visibility = "visible"; box.style.opacity = 1; ;}, randomNum()); //targets will appear after a random time interval
@@ -117,34 +137,13 @@ for(let box of targets){ //target logic
   });
   }
 
-var logic = setInterval(function() { //this function speeds up the pace of the game towards the end of the time limit
-  for(let box of targets){
-    box.style.visibility = "hidden";
-    function randomNum() { //random number generator for the time targets take to appear/reappear
-      return(Math.floor(Math.random() * 10000) + 500); //number is between 1000 and 10000
-    }
-    setTimeout(function(){ box.style.visibility = "visible"; box.style.opacity = 1;}, randomNum() * 2);
-    setTimeout(function(){ box.style.opacity = 0; setTimeout(function(){box.style.visibility = "hidden";},500);}, 7000);
-    box.addEventListener('click', function() {
-      if (ammoCount.innerHTML > 0) {
-        box.style.opacity = 0;
-        box.style.visibility = "hidden";
-        setTimeout(function(){ box.style.visibility = "visible"; box.style.opacity = 1;}, randomNum() * 2);
-        setTimeout(function(){ box.style.opacity = 0; setTimeout(function(){box.style.visibility = "hidden";},500);}, 7000);
-      } else {
-
-      }
-  });
-  }
-}, randomNum2());
-
-setInterval(function() { //this function makes a bird fly across the screen
+setTimeout(function() { //this function makes a bird fly across the screen
   birdControl.style.opacity = 1;
   birdControl.style.marginLeft = "730px"
   setTimeout(function(){ birdControl.style.opacity = 0; },8000);
-  setTimeout(function(){ birdControl.style.marginLeft = 0; },8000);
+  // setTimeout(function(){ birdControl.style.marginLeft = 0; },8000);
 
-}, randomNum4());
+}, 10000);
 
 birdControl.addEventListener('click', function() {
 if (ammoCount.innerHTML > 0) {

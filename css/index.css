@@ -5,7 +5,7 @@
   background-size: contain;
   text-align: center;
   margin: auto;
-  cursor: url('../images/crosshair.png'), auto;
+  cursor: crosshair;
   font-family: "Impact";
   color: black;
   text-shadow:
@@ -37,13 +37,24 @@
 
 #instructions {
   font-size: 30px;
-  text-shadow: none;
+
   margin-top: 50px;
   margin-left: 150px;
   margin-right: 150px;
-  background-color: white;
-  border-style: solid;
-  border-width: 10px;
+  background-color: lightgrey;
+  color: blue;
+}
+
+.buttons {
+    background-color: black;
+    border: solid;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 #menuButton {
