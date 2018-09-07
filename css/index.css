@@ -1,3 +1,7 @@
+#body {
+  z-index: 1
+}
+
 .gameArea {
   height: 580px;
   width: 790px;
@@ -26,15 +30,6 @@
   border-radius: 100px;
 }
 
-#reload {
-  color: white;
-  text-shadow: none;
-  cursor: pointer;
-  background-color: black;
-  margin-left: 50px;
-  margin-right: 50px;
-}
-
 #instructions {
   font-size: 30px;
 
@@ -55,6 +50,11 @@
     display: inline-block;
     font-size: 16px;
     cursor: pointer;
+    transition-duration: 0.4s;
+}
+
+.buttons:hover {
+    font-size: 20px;
 }
 
 #menuButton {
@@ -73,4 +73,5 @@
   transition: opacity 1s;
   margin-left: 0px;
   transition: margin-left 10s;
+  animation-timing-function: linear;
 }

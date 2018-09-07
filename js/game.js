@@ -3,14 +3,13 @@ function randomNum() { //random number generator for the time targets take to ap
 }
 
 function randomNum2() { //random number generator for the size of the targets
-  return(Math.floor(Math.random() * 60) + 25); //number is between 100 and 25
+  return(Math.floor(Math.random() * 50) + 25); //number is between 100 and 25
 }
 
 var targets = document.getElementsByClassName('targets'); //these variables will allow the HTML to be edited later
 var scoreCount = document.getElementById('score');
 var ammoCount = document.getElementById('ammo');
 var clickArea = document.getElementsByClassName('gameArea')[0];
-var reload = document.getElementById('reload');
 var flash = document.getElementById('redFlash');
 var timer = document.getElementById('countdown');
 var highScoreDisplay = document.getElementById('highestScore');
@@ -61,9 +60,11 @@ var i = setInterval(function() { //this function repeats once per second, the ga
       newHeading.innerHTML = "Time is up! Final score: "+parseInt(scoreCount.innerHTML);
     }
     var newButton = document.createElement("button"); //create buttons to try again or return to the menu
+    newButton.className = "buttons";
     newButton.style.textAlign = "center";
     newButton.innerHTML = "Try Again";
     var newButton2 = document.createElement("button");
+    newButton2.className = "buttons";
     newButton.addEventListener('click', function() {
       location.reload()
     });
@@ -104,10 +105,12 @@ var i = setInterval(function() { //this function repeats once per second, the ga
 
 }, 1000);
 
-reload.addEventListener('click', function() { //reload button
+window.addEventListener("keyup", dealWithKeyboard, false);
+
+function dealWithKeyboard(e) {
   ammoCount.innerHTML = "Reloading...";
-  setTimeout(function(){ ammoCount.innerHTML = 8;}, 2000); //Takes 2 seconds to reload
-});
+  setTimeout(function(){ ammoCount.innerHTML = 8;}, 2000);  // gets called when any of the keyboard events are overheard
+}
 
 clickArea.addEventListener('click', function() { //deplete ammo when clicking in game area
   if (ammoCount.innerHTML > 0) {
@@ -147,8 +150,9 @@ setTimeout(function() { //this function makes a bird fly across the screen
 
 birdControl.addEventListener('click', function() {
 if (ammoCount.innerHTML > 0) {
+  scoreCount.innerHTML = eval(parseInt(scoreCount.innerHTML) + 1);
   birdControl.style.opacity = 0;
-  birdControl.style.marginLeft = 0
+  birdControl.style.marginLeft = 0;
   scoreCount.innerHTML = (parseInt(scoreCount.innerHTML) + 5);
 }
 });
