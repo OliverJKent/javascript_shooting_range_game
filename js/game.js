@@ -6,6 +6,10 @@ function randomNum2() { //random number generator for the size of the targets
   return(Math.floor(Math.random() * 50) + 25); //number is between 100 and 25
 }
 
+function randomNum3() { //random number generator for the time before targets disapear
+  return(Math.floor(Math.random() * 2000) + 5000);
+}
+
 var targets = document.getElementsByClassName('targets'); //these variables will allow the HTML to be edited later
 var scoreCount = document.getElementById('score');
 var ammoCount = document.getElementById('ammo');
@@ -15,34 +19,19 @@ var timer = document.getElementById('countdown');
 var highScoreDisplay = document.getElementById('highestScore');
 var birdControl = document.getElementById('bird');
 
-if (localStorage.hasOwnProperty('highScoreList1') === false) { //If local storage for the high score has not been created
-  localStorage.setItem('highScoreList1', 0);  //create one and set it to 0
+if (localStorage.hasOwnProperty('highScoreList') === false) { //If local storage for the high scores has not been created
+  localStorage.setItem('highScoreList', JSON.stringify([0, 0, 0, 0, 0]));  //create one and set it to the default values
 }
 
-if (localStorage.hasOwnProperty('highScoreList2') === false) { //If local storage for the high score has not been created
-  localStorage.setItem('highScoreList2', 0);  //create one and set it to 0
-}
-
-if (localStorage.hasOwnProperty('highScoreList3') === false) { //If local storage for the high score has not been created
-  localStorage.setItem('highScoreList3', 0);  //create one and set it to 0
-}
-
-if (localStorage.hasOwnProperty('highScoreList4') === false) { //If local storage for the high score has not been created
-  localStorage.setItem('highScoreList4', 0);  //create one and set it to 0
-}
-
-if (localStorage.hasOwnProperty('highScoreList5') === false) { //If local storage for the high score has not been created
-  localStorage.setItem('highScoreList5', 0);  //create one and set it to 0
-}
-
-highScoreDisplay.innerHTML = localStorage.getItem('highScoreList1'); //display the stored high score
+var scores = JSON.parse(localStorage.getItem('highScoreList'));
+highScoreDisplay.innerHTML = scores[0]; //display the stored high score
 
 var seconds = 0;
-var i = setInterval(function() { //this function repeats once per second, the game will end after 60 seconds
+setInterval(function() { //this function repeats once per second, the game will end after 30 seconds
   seconds++; //add one to the total number of seconds
-  timer.innerHTML = timer.innerHTML - 1; //take one off the time remaining
+  timer.innerHTML -= 1; //take one off the time remaining
   if (seconds === 30) { //if the time is up
-    clearInterval(i); //stop the interval
+    clearInterval(); //stop the interval
     $('#targetDiv1').remove(); //remove these elements
     $('#targetDiv2').remove();
     $('#targetDiv3').remove();
@@ -53,7 +42,7 @@ var i = setInterval(function() { //this function repeats once per second, the ga
     $('#remaining').remove();
     var newHeading = document.createElement("h1"); //create a new heading that tells you time is up
     newHeading.style.textAlign = "center";
-    if (parseInt(scoreCount.innerHTML) > localStorage.getItem('highScoreList1')) {
+    if (parseInt(scoreCount.innerHTML) > scores[0]) {
       newHeading.innerHTML = "Time is up! You set a new highscore: "+parseInt(scoreCount.innerHTML);
       $('#highScoreDisplay').remove();
     } else {
@@ -79,35 +68,16 @@ var i = setInterval(function() { //this function repeats once per second, the ga
     document.getElementById('gameArea').appendChild(document.createElement("br"));
     document.getElementById('gameArea').appendChild(document.createElement("br"));
     document.getElementById('gameArea').appendChild(newButton2);
-    if (parseInt(scoreCount.innerHTML) >= localStorage.getItem('highScoreList5') && parseInt(scoreCount.innerHTML) <= localStorage.getItem('highScoreList4')) {
-        localStorage.setItem('highScoreList5', scoreCount.innerHTML);
-    } else if (parseInt(scoreCount.innerHTML) >= localStorage.getItem('highScoreList4') && parseInt(scoreCount.innerHTML) <= localStorage.getItem('highScoreList3')) {
-        localStorage.setItem('highScoreList5',localStorage.getItem('highScoreList4'));
-        localStorage.setItem('highScoreList4', parseInt(scoreCount.innerHTML));
-    } else if (parseInt(scoreCount.innerHTML) >= localStorage.getItem('highScoreList3') && parseInt(scoreCount.innerHTML) <= localStorage.getItem('highScoreList2')) {
-        localStorage.setItem('highScoreList5',localStorage.getItem('highScoreList4'));
-        localStorage.setItem('highScoreList4',localStorage.getItem('highScoreList3'));
-        localStorage.setItem('highScoreList3', parseInt(scoreCount.innerHTML));
-    } else if (parseInt(scoreCount.innerHTML) >= localStorage.getItem('highScoreList2') && parseInt(scoreCount.innerHTML) <= localStorage.getItem('highScoreList1')) {
-        localStorage.setItem('highScoreList5',localStorage.getItem('highScoreList4'));
-        localStorage.setItem('highScoreList4',localStorage.getItem('highScoreList3'));
-        localStorage.setItem('highScoreList3',localStorage.getItem('highScoreList2'));
-        localStorage.setItem('highScoreList2', scoreCount.innerHTML);
-    } else if (parseInt(scoreCount.innerHTML) >= localStorage.getItem('highScoreList1'))  {
-        localStorage.setItem('highScoreList5',localStorage.getItem('highScoreList4'));
-        localStorage.setItem('highScoreList4',localStorage.getItem('highScoreList3'));
-        localStorage.setItem('highScoreList3',localStorage.getItem('highScoreList2'));
-        localStorage.setItem('highScoreList2',localStorage.getItem('highScoreList1'));
-        localStorage.setItem('highScoreList1', scoreCount.innerHTML);
-        highScoreDisplay.innerHTML = parseInt(localStorage.getItem('highScoreList1'));
+    scores.push(parseInt(scoreCount.innerHTML)); //add the current score to the array
+    scores.sort(function(a, b){return b - a}); //order the array numerically from highest to lowest
+    scores.pop(); //remove the last item from the array, we only want the top 5 scores stored
+    localStorage.setItem('highScoreList', JSON.stringify(scores)); //convert to a string and update the stored scores
     }
-    }
-
 }, 1000);
 
 window.addEventListener("keyup", dealWithKeyboard, false);
 
-function dealWithKeyboard(e) {
+function dealWithKeyboard() {
   ammoCount.innerHTML = "Reloading...";
   setTimeout(function(){ ammoCount.innerHTML = 8;}, 2000);  // gets called when any of the keyboard events are overheard
 }
@@ -123,12 +93,12 @@ clickArea.addEventListener('click', function() { //deplete ammo when clicking in
 });
 
 for(let box of targets){ //target logic
-  box.style.visibility = "hidden"; //the target are hidden to start with
+  box.style.visibility = "hidden"; //the targets are hidden to start with
   var size = randomNum2();
   box.style.height = size + "px"; //the size of the targets is random
   box.style.width = size + "px";
   setTimeout(function(){ box.style.visibility = "visible"; box.style.opacity = 1; ;}, randomNum()); //targets will appear after a random time interval
-  setTimeout(function(){ box.style.opacity = 0; setTimeout(function(){box.style.visibility = "hidden";},500);}, 5000); //targets will disappear after a few seconds if they are not clicked
+  setTimeout(function(){ box.style.opacity = 0; setTimeout(function(){box.style.visibility = "hidden";},500);}, randomNum3()); //targets will disappear after a few seconds if they are not clicked
   box.addEventListener('click', function() { //when a target is clicked
     if (ammoCount.innerHTML > 0) { //if there is enough ammo
       box.style.opacity = 0; //hide the target
