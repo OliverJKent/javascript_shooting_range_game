@@ -1,16 +1,8 @@
-function randomNum() { //random number generator for the time targets take to appear/reappear
-  return(Math.floor(Math.random() * 10000) + 500); //number is between 1000 and 10000
+function randomNum(num1, num2) { //reusable random number generator
+  return(Math.floor(Math.random() * num1) + num2); //number is a value between num1 and num2
 }
 
-function randomNum2() { //random number generator for the size of the targets
-  return(Math.floor(Math.random() * 50) + 25); //number is between 100 and 25
-}
-
-function randomNum3() { //random number generator for the time before targets disapear
-  return(Math.floor(Math.random() * 2000) + 5000);
-}
-
-var targets = document.getElementsByClassName('targets'); //these variables will allow the HTML to be edited later
+var targets = document.getElementsByClassName('targets'); //store HTML elements in variables for better readability
 var scoreCount = document.getElementById('score');
 var ammoCount = document.getElementById('ammo');
 var clickArea = document.getElementsByClassName('gameArea')[0];
@@ -32,14 +24,7 @@ setInterval(function() { //this function repeats once per second, the game will 
   timer.innerHTML -= 1; //take one off the time remaining
   if (seconds === 30) { //if the time is up
     clearInterval(); //stop the interval
-    $('#targetDiv1').remove(); //remove these elements
-    $('#targetDiv2').remove();
-    $('#targetDiv3').remove();
-    $('#scoreDisplay').remove();
-    $('#redFlash').remove();
-    $('#reload').remove();
-    $('#menuButton').remove();
-    $('#remaining').remove();
+    $('#targetDiv1, #targetDiv2, #targetDiv3, #scoreDisplay, #redFlash, #reload, #menuButton, #remaining').remove(); //remove these elements
     var newHeading = document.createElement("h1"); //create a new heading that tells you time is up
     newHeading.style.textAlign = "center";
     if (parseInt(scoreCount.innerHTML) > scores[0]) {
@@ -94,17 +79,17 @@ clickArea.addEventListener('click', function() { //deplete ammo when clicking in
 
 for(let box of targets){ //target logic
   box.style.visibility = "hidden"; //the targets are hidden to start with
-  var size = randomNum2();
+  var size = randomNum(50, 25);
   box.style.height = size + "px"; //the size of the targets is random
   box.style.width = size + "px";
-  setTimeout(function(){ box.style.visibility = "visible"; box.style.opacity = 1; ;}, randomNum()); //targets will appear after a random time interval
-  setTimeout(function(){ box.style.opacity = 0; setTimeout(function(){box.style.visibility = "hidden";},500);}, randomNum3()); //targets will disappear after a few seconds if they are not clicked
+  setTimeout(function(){ box.style.visibility = "visible"; box.style.opacity = 1; ;}, randomNum(10000, 500)); //targets will appear after a random time interval
+  setTimeout(function(){ box.style.opacity = 0; setTimeout(function(){box.style.visibility = "hidden";},500);}, randomNum(2000, 5000)); //targets will disappear after a few seconds if they are not clicked
   box.addEventListener('click', function() { //when a target is clicked
     if (ammoCount.innerHTML > 0) { //if there is enough ammo
       box.style.opacity = 0; //hide the target
       box.style.visibility = "hidden";
       scoreCount.innerHTML = eval(parseInt(scoreCount.innerHTML) + 1); //add one to the player's score
-      setTimeout(function(){ box.style.visibility = "visible"; box.style.opacity = 1;}, randomNum()); //the target will reappear after a random time interval
+      setTimeout(function(){ box.style.visibility = "visible"; box.style.opacity = 1;}, randomNum(10000, 5000)); //the target will reappear after a random time interval
       setTimeout(function(){ box.style.opacity = 0; setTimeout(function(){box.style.visibility = "hidden";},500);}, 5000);
       }
   });
@@ -114,8 +99,6 @@ setTimeout(function() { //this function makes a bird fly across the screen
   birdControl.style.opacity = 1;
   birdControl.style.marginLeft = "730px"
   setTimeout(function(){ birdControl.style.opacity = 0; },8000);
-  // setTimeout(function(){ birdControl.style.marginLeft = 0; },8000);
-
 }, 10000);
 
 birdControl.addEventListener('click', function() {
